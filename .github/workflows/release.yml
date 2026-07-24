@@ -1,0 +1,57 @@
+name: Release
+
+# Publishes to npm via OIDC trusted publishing when a version tag is pushed.
+# No NPM_TOKEN secret is needed — GitHub's OIDC identity is exchanged for a
+# short-lived publish credential, and npm records build provenance automatically.
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write # create the GitHub Release
+  id-token: write # required for npm OIDC trusted publishing
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: "https://registry.npmjs.org"
+
+      # Trusted publishing (OIDC) requires a recent npm CLI.
+      - name: Upgrade npm for OIDC
+        run: npm install -g npm@11
+
+      # Fail fast if the tag doesn't match the version in package.json.
+      - name: Verify tag matches package.json version
+        run: |
+          PKG_VERSION="v$(node -p "require('./package.json').version")"
+          if [ "$PKG_VERSION" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match package.json version $PKG_VERSION"
+            exit 1
+          fi
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run typecheck
+      - run: pnpm test
+      - run: pnpm run build
+
+      # With a trusted publisher configured on npmjs.com, this authenticates via
+      # OIDC — no token required. Provenance is attached automatically.
+      - name: Publish to npm
+        run: npm publish --access public
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" --generate-notes

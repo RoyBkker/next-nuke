@@ -1,0 +1,66 @@
+{
+  "name": "next-nuke",
+  "version": "0.1.0",
+  "description": "npkill for Next.js — find and nuke bloated .next (and optionally node_modules/.turbo) folders, then reinstall a fresh instance. Monorepo & pnpm aware.",
+  "keywords": [
+    "nextjs",
+    "next",
+    ".next",
+    "cache",
+    "node_modules",
+    "turbo",
+    "turborepo",
+    "monorepo",
+    "pnpm",
+    "cleanup",
+    "disk-space",
+    "npkill",
+    "cli",
+    "reset"
+  ],
+  "type": "module",
+  "bin": {
+    "next-nuke": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run typecheck && npm run test && npm run build"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.7.0",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "tsup": "^8.5.1",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
+  },
+  "license": "MIT",
+  "author": "Roy Bakker",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RoyBkker/next-nuke.git"
+  },
+  "homepage": "https://github.com/RoyBkker/next-nuke#readme",
+  "bugs": {
+    "url": "https://github.com/RoyBkker/next-nuke/issues"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}
