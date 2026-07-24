@@ -10,8 +10,12 @@ export interface NextApp {
   readonly dir: string;
   /** Absolute path to the `.next` folder. */
   readonly nextDir: string;
-  /** Absolute path to `.next/cache`, if it exists. */
-  readonly cacheDir: string | null;
+  /**
+   * Absolute paths to every cache folder this app has. Next.js < 16 uses
+   * `.next/cache`; Next.js 16+ additionally stores the dev cache in
+   * `.next/dev/cache`. Only the ones that exist are included.
+   */
+  readonly cacheDirs: readonly string[];
   /** Human-friendly label for prompts (relative to the scan root). */
   readonly label: string;
 }

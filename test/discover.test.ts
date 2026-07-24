@@ -39,7 +39,8 @@ beforeEach(() => {
   write("apps/web/package.json", JSON.stringify({ name: "web", dependencies: { next: "15.0.0" } }));
   write("apps/web/next.config.js", "module.exports = {}");
   write("apps/web/.next/BUILD_ID", "abc");
-  write("apps/web/.next/cache/big", "x".repeat(2000));
+  write("apps/web/.next/cache/big", "x".repeat(2000)); // legacy build cache
+  write("apps/web/.next/dev/cache/big", "x".repeat(2000)); // Next.js 16 dev cache
   write("apps/web/node_modules/dep/index.js", "x");
 
   // apps/docs — real Next app (devDependency only).
@@ -99,14 +100,17 @@ describe("dirSize", () => {
 });
 
 describe("toNextApp", () => {
-  it("captures cache dir and a relative label", () => {
+  it("captures a relative label and both cache dirs (build + Next 16 dev)", () => {
     const app = toNextApp(path.join(root, "apps/web/.next"), root);
     expect(app.label).toBe("apps/web");
-    expect(app.cacheDir).not.toBeNull();
+    expect(app.cacheDirs).toEqual([
+      path.join(root, "apps/web/.next/cache"),
+      path.join(root, "apps/web/.next/dev/cache"),
+    ]);
   });
-  it("reports null cache dir when absent", () => {
+  it("reports no cache dirs when absent", () => {
     const app = toNextApp(path.join(root, "apps/docs/.next"), root);
-    expect(app.cacheDir).toBeNull();
+    expect(app.cacheDirs).toEqual([]);
   });
 });
 

@@ -93,12 +93,18 @@ export function assertSafeToDelete(targetPath: string, scanRoot: string): void {
 
   const base = path.basename(resolved);
   const parentBase = path.basename(path.dirname(resolved));
+  const grandParentBase = path.basename(path.dirname(path.dirname(resolved)));
   const isAllowedFolder = ALLOWED_BASENAMES.has(base);
-  const isNextCache = base === "cache" && parentBase === ".next";
+  // Allow the build cache (`.next/cache`) and the Next.js 16 dev cache
+  // (`.next/dev/cache`) — but nothing else named "cache".
+  const isNextCache =
+    base === "cache" &&
+    (parentBase === ".next" ||
+      (parentBase === "dev" && grandParentBase === ".next"));
 
   if (!isAllowedFolder && !isNextCache) {
     throw new SafetyError(
-      `Refusing to delete unexpected path (not .next / node_modules / .turbo / .next/cache): ${resolved}`,
+      `Refusing to delete unexpected path (not .next / node_modules / .turbo / .next[/dev]/cache): ${resolved}`,
     );
   }
 }

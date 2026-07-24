@@ -73,6 +73,17 @@ describe("assertSafeToDelete (INVARIANT #2)", () => {
     expect(() => assertSafeToDelete(p, root)).not.toThrow();
   });
 
+  it("allows .next/dev/cache (Next.js 16 dev cache)", () => {
+    const p = path.join(root, "apps", "web", ".next", "dev", "cache");
+    expect(() => assertSafeToDelete(p, root)).not.toThrow();
+  });
+
+  it("refuses a 'dev/cache' whose grandparent is not .next", () => {
+    // parent is 'dev' but grandparent is 'web', not '.next' — must be refused.
+    const p = path.join(root, "apps", "web", "dev", "cache");
+    expect(() => assertSafeToDelete(p, root)).toThrow(SafetyError);
+  });
+
   it("refuses a non-allowed folder name", () => {
     expect(() => assertSafeToDelete(path.join(root, "src"), root)).toThrow(
       SafetyError,

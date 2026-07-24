@@ -38,7 +38,7 @@ npx next-nuke [path] [options]
 | Command | What it does |
 | --- | --- |
 | `next-nuke` | Delete the whole `.next` (regenerates on next `dev`/`build`) |
-| `next-nuke --cache` | Delete only `.next/cache` — reclaim disk, keep the compiled build |
+| `next-nuke --cache` | Delete only the Next.js caches (`.next/cache` and, on Next 16+, `.next/dev/cache`) — reclaim disk, keep the compiled build |
 | `next-nuke --full` | Delete `node_modules` + `.next`, then **reinstall** dependencies |
 | `next-nuke --turbo` | Also clear `.turbo` caches |
 | `next-nuke --build` | Run the project's build after cleaning |
@@ -68,7 +68,7 @@ next-nuke --full --yes --exclude apps/legacy --exclude packages/docs
 
 `next-nuke` runs `rm -rf`, so it's built defensively:
 
-- **It only ever deletes** folders named `.next`, `node_modules`, `.turbo`, or `.next/cache` — never your source files, configs, or documents. Every path is re-checked against this rule immediately before deletion.
+- **It only ever deletes** folders named `.next`, `node_modules`, `.turbo`, `.next/cache`, or `.next/dev/cache` — never your source files, configs, or documents. Every path is re-checked against this rule immediately before deletion.
 - **It refuses to run** at your home directory, the filesystem root, or any ancestor of home.
 - **It stays in scope** — every target must be inside the directory you pointed it at.
 - **It never follows symlinks** — symlinked build folders are skipped, not chased.

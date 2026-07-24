@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-07-24
+
+### Fixed
+
+- `--cache` now also clears the Next.js 16 dev-server cache at `.next/dev/cache`, not just the build cache at `.next/cache`. On Next.js 16 (`next dev` writes to `.next/dev`), the dev cache is usually the largest one, and `--cache` was silently missing it entirely — so apps whose only cache lived in `.next/dev/cache` were skipped. Both cache locations are now detected and cleared when present.
+
 ## [0.2.0] - 2026-07-24
 
 ### Added
@@ -39,7 +45,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Monorepo-aware discovery — downward from the current directory, skipping `node_modules`, requiring a real Next.js project, never following symlinks — with an interactive checklist when multiple apps are found.
 - Safety guardrails: refuses to run at `$HOME` or the filesystem root, and only ever deletes `.next`, `node_modules`, `.turbo`, or `.next/cache`.
 
-[Unreleased]: https://github.com/RoyBkker/next-nuke/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/RoyBkker/next-nuke/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/RoyBkker/next-nuke/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/RoyBkker/next-nuke/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/RoyBkker/next-nuke/releases/tag/v0.1.1
 [0.1.0]: https://www.npmjs.com/package/next-nuke/v/0.1.0

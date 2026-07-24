@@ -6,7 +6,7 @@ function makeApp(dir: string, hasCache = true): NextApp {
   return {
     dir,
     nextDir: `${dir}/.next`,
-    cacheDir: hasCache ? `${dir}/.next/cache` : null,
+    cacheDirs: hasCache ? [`${dir}/.next/cache`] : [],
     label: dir,
   };
 }
@@ -40,6 +40,24 @@ describe("selectTargetPaths", () => {
       turbo: false,
     });
     expect(out).toEqual([{ path: "/r/apps/web/.next/cache", kind: "next-cache" }]);
+  });
+
+  it("--cache targets every cache dir an app has (Next 16 dev cache)", () => {
+    const app16: NextApp = {
+      dir: "/r/apps/site",
+      nextDir: "/r/apps/site/.next",
+      cacheDirs: ["/r/apps/site/.next/cache", "/r/apps/site/.next/dev/cache"],
+      label: "apps/site",
+    };
+    const out = selectTargetPaths([app16], scan, {
+      cache: true,
+      full: false,
+      turbo: false,
+    });
+    expect(out).toEqual([
+      { path: "/r/apps/site/.next/cache", kind: "next-cache" },
+      { path: "/r/apps/site/.next/dev/cache", kind: "next-cache" },
+    ]);
   });
 
   it("--full adds every node_modules in scope (workspace-wide)", () => {
@@ -80,7 +98,7 @@ describe("filterExcluded", () => {
   const mk = (label: string): NextApp => ({
     dir: `/r/${label}`,
     nextDir: `/r/${label}/.next`,
-    cacheDir: null,
+    cacheDirs: [],
     label,
   });
   const apps = [mk("apps/web"), mk("apps/docs"), mk("packages/ui")];
@@ -114,7 +132,7 @@ describe("filterExcluded", () => {
 
   it("normalizes separators so apps/web matches a backslash label", () => {
     const win: NextApp[] = [
-      { dir: "C:/r/apps/web", nextDir: "x", cacheDir: null, label: "apps\\web" },
+      { dir: "C:/r/apps/web", nextDir: "x", cacheDirs: [], label: "apps\\web" },
     ];
     expect(filterExcluded(win, ["apps/web"])).toHaveLength(0);
   });

@@ -109,15 +109,32 @@ export function dirSize(dir: string): number {
   return total;
 }
 
+function isDir(p: string): boolean {
+  try {
+    return statSync(p).isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Cache locations relative to `.next`, in the order they should be listed.
+ * `cache` is the build cache (all Next versions); `dev/cache` is the dev-server
+ * cache introduced in Next.js 16 (`next dev` now writes to `.next/dev`).
+ */
+const CACHE_SUBPATHS = ["cache", "dev/cache"];
+
 /** Build a NextApp descriptor from a discovered `.next` directory. */
 export function toNextApp(nextDir: string, scanRoot: string): NextApp {
   const dir = path.dirname(nextDir);
-  const cacheDir = path.join(nextDir, "cache");
+  const cacheDirs = CACHE_SUBPATHS.map((sub) => path.join(nextDir, sub)).filter(
+    isDir,
+  );
   const rel = path.relative(path.resolve(scanRoot), dir);
   return {
     dir,
     nextDir,
-    cacheDir: existsSync(cacheDir) ? cacheDir : null,
+    cacheDirs,
     label: rel === "" ? path.basename(dir) : rel,
   };
 }

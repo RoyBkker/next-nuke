@@ -57,7 +57,9 @@ export function selectTargetPaths(
 
   for (const app of apps) {
     if (options.cache) {
-      if (app.cacheDir) planned.push({ path: app.cacheDir, kind: "next-cache" });
+      for (const cacheDir of app.cacheDirs) {
+        planned.push({ path: cacheDir, kind: "next-cache" });
+      }
     } else {
       planned.push({ path: app.nextDir, kind: "next" });
     }

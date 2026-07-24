@@ -87,8 +87,9 @@ async function main(): Promise<void> {
     .filter((nextDir) => isNextProject(path.dirname(nextDir)))
     .map((nextDir) => toNextApp(nextDir, scanRoot));
 
-  // --cache only makes sense for apps that actually have a .next/cache.
-  if (options.cache) apps = apps.filter((a) => a.cacheDir !== null);
+  // --cache only makes sense for apps that actually have a cache folder
+  // (.next/cache and/or, on Next.js 16+, .next/dev/cache).
+  if (options.cache) apps = apps.filter((a) => a.cacheDirs.length > 0);
 
   // Apply --exclude before selection so it governs both the checklist and --yes.
   const beforeExclude = apps.length;
@@ -98,8 +99,10 @@ async function main(): Promise<void> {
   // Size each app's target for display in the picker.
   const appSize = new Map<string, number>();
   for (const app of apps) {
-    const target = options.cache ? app.cacheDir : app.nextDir;
-    if (target) appSize.set(app.dir, dirSize(target));
+    const size = options.cache
+      ? app.cacheDirs.reduce((sum, d) => sum + dirSize(d), 0)
+      : dirSize(app.nextDir);
+    appSize.set(app.dir, size);
   }
   scanSpin.stop(
     `Found ${plural(apps.length, "Next.js app")} under ${pc.dim(scanRoot)}`,
