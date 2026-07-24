@@ -2,6 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/next-nuke?color=cb3837&logo=npm)](https://www.npmjs.com/package/next-nuke)
 [![npm downloads](https://img.shields.io/npm/dm/next-nuke?color=cb3837&logo=npm)](https://www.npmjs.com/package/next-nuke)
+[![install size](https://packagephobia.com/badge?p=next-nuke)](https://packagephobia.com/result?p=next-nuke)
 [![CI](https://github.com/RoyBkker/next-nuke/actions/workflows/ci.yml/badge.svg)](https://github.com/RoyBkker/next-nuke/actions/workflows/ci.yml)
 [![node](https://img.shields.io/node/v/next-nuke)](https://www.npmjs.com/package/next-nuke)
 [![license](https://img.shields.io/npm/l/next-nuke)](./LICENSE)
