@@ -1,5 +1,9 @@
 # next-nuke
 
+[![npm version](https://img.shields.io/npm/v/next-nuke?color=cb3837&logo=npm)](https://www.npmjs.com/package/next-nuke)
+[![CI](https://github.com/RoyBkker/next-nuke/actions/workflows/ci.yml/badge.svg)](https://github.com/RoyBkker/next-nuke/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/next-nuke)](./LICENSE)
+
 **npkill, but for Next.js.** Find and nuke bloated `.next` build folders — and, when you want a truly clean slate, `node_modules` and `.turbo` too — then reinstall a fresh instance. Monorepo- and pnpm-aware.
 
 ```bash
@@ -65,6 +69,17 @@ Run it at the repo root and it finds every app's `.next`; when there's more than
 ## Requirements
 
 - Node.js >= 20
+
+## Releasing
+
+Releases are fully automated via GitHub Actions + npm [OIDC trusted publishing](https://docs.npmjs.com/trusted-publishers/) — no tokens, no manual `npm publish`. To cut a release:
+
+```bash
+npm version patch       # or minor / major — bumps package.json, commits, and tags vX.Y.Z
+git push --follow-tags  # pushes the tag; the Release workflow does the rest
+```
+
+Pushing a `v*.*.*` tag triggers `.github/workflows/release.yml`, which verifies the tag matches `package.json`, runs typecheck + tests + build, publishes to npm with provenance, and creates a GitHub Release with generated notes.
 
 ## License
 
