@@ -12,6 +12,30 @@ export interface PlannedPath {
   readonly kind: TargetKind;
 }
 
+/** Normalize path separators so `--exclude apps/web` matches on any platform. */
+function normalize(value: string): string {
+  return value.split("\\").join("/");
+}
+
+/**
+ * Drop apps whose label (their path relative to the scan root) contains any of
+ * the exclude patterns. Case-sensitive substring match on normalized paths.
+ * Pure and deterministic — used before app selection, so it applies to both the
+ * interactive checklist and non-interactive (`--yes`) runs.
+ */
+export function filterExcluded(
+  apps: readonly NextApp[],
+  patterns: readonly string[],
+): NextApp[] {
+  if (patterns.length === 0) return [...apps];
+  const needles = patterns.map(normalize).filter((p) => p.length > 0);
+  if (needles.length === 0) return [...apps];
+  return apps.filter((app) => {
+    const hay = normalize(app.label);
+    return !needles.some((needle) => hay.includes(needle));
+  });
+}
+
 /**
  * Decide which paths to delete from the selected apps + scan result + flags.
  * Pure and deterministic (no filesystem sizing), so it can be unit-tested.

@@ -12,7 +12,7 @@ import {
   detectInstallRoot,
   type InstallRootResult,
 } from "./discover.js";
-import { selectTargetPaths, measureTargets } from "./plan.js";
+import { selectTargetPaths, measureTargets, filterExcluded } from "./plan.js";
 import {
   deleteTargets,
   installCommand,
@@ -73,6 +73,7 @@ async function main(): Promise<void> {
     build: parsed.build,
     dryRun: parsed.dryRun,
     yes: parsed.yes,
+    exclude: parsed.exclude,
   };
 
   p.intro(pc.bgCyan(pc.black(" next-nuke ")));
@@ -89,6 +90,11 @@ async function main(): Promise<void> {
   // --cache only makes sense for apps that actually have a .next/cache.
   if (options.cache) apps = apps.filter((a) => a.cacheDir !== null);
 
+  // Apply --exclude before selection so it governs both the checklist and --yes.
+  const beforeExclude = apps.length;
+  if (options.exclude.length > 0) apps = filterExcluded(apps, options.exclude);
+  const excludedCount = beforeExclude - apps.length;
+
   // Size each app's target for display in the picker.
   const appSize = new Map<string, number>();
   for (const app of apps) {
@@ -98,10 +104,21 @@ async function main(): Promise<void> {
   scanSpin.stop(
     `Found ${plural(apps.length, "Next.js app")} under ${pc.dim(scanRoot)}`,
   );
+  if (excludedCount > 0) {
+    p.log.info(pc.dim(`Excluded ${plural(excludedCount, "app")} via --exclude.`));
+  }
 
   if (apps.length === 0) {
-    const what = options.cache ? ".next/cache" : ".next";
-    p.outro(pc.dim(`No ${what} to clean in any Next.js project here.`));
+    if (excludedCount > 0) {
+      p.outro(
+        pc.dim(
+          `All ${plural(excludedCount, "Next.js app")} were excluded by --exclude. Nothing to do.`,
+        ),
+      );
+    } else {
+      const what = options.cache ? ".next/cache" : ".next";
+      p.outro(pc.dim(`No ${what} to clean in any Next.js project here.`));
+    }
     return;
   }
 

@@ -42,6 +42,7 @@ npx next-nuke [path] [options]
 | `next-nuke --full` | Delete `node_modules` + `.next`, then **reinstall** dependencies |
 | `next-nuke --turbo` | Also clear `.turbo` caches |
 | `next-nuke --build` | Run the project's build after cleaning |
+| `next-nuke --exclude <pattern>` | Skip apps whose path contains `<pattern>` (repeatable) |
 | `next-nuke --dry-run` | Show the plan, delete nothing |
 | `next-nuke -y, --yes` | Skip the confirmation prompt (scripts / CI) |
 
@@ -50,6 +51,12 @@ Flags compose: `next-nuke --full --turbo --build`.
 ### Monorepos
 
 Run it at the repo root and it finds every app's `.next`; when there's more than one, you get a checklist to pick which to reset. Run it inside a single app and it resets just that one. Discovery only ever looks **at or below** where you stand — it never reaches up and touches sibling apps.
+
+Use `--exclude` to skip apps by path — handy for non-interactive (`--yes`) or CI runs where you can't use the checklist. It's repeatable and matches a substring of each app's path:
+
+```bash
+next-nuke --full --yes --exclude apps/legacy --exclude packages/docs
+```
 
 ### pnpm / package managers
 

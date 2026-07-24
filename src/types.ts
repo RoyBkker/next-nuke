@@ -48,4 +48,5 @@ export interface Options {
   readonly build: boolean;
   readonly dryRun: boolean;
   readonly yes: boolean;
+  readonly exclude: readonly string[];
 }

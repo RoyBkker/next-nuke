@@ -12,6 +12,7 @@ export interface ParsedCli {
   readonly build: boolean;
   readonly dryRun: boolean;
   readonly yes: boolean;
+  readonly exclude: string[];
 }
 
 /**
@@ -28,6 +29,7 @@ export function parseCliArgs(argv: string[]): ParsedCli {
       cache: { type: "boolean", default: false },
       turbo: { type: "boolean", default: false },
       build: { type: "boolean", default: false },
+      exclude: { type: "string", multiple: true },
       "dry-run": { type: "boolean", default: false },
       yes: { type: "boolean", short: "y", default: false },
       help: { type: "boolean", short: "h", default: false },
@@ -45,6 +47,7 @@ export function parseCliArgs(argv: string[]): ParsedCli {
     build: values.build ?? false,
     dryRun: values["dry-run"] ?? false,
     yes: values.yes ?? false,
+    exclude: values.exclude ?? [],
   };
 }
 
@@ -74,6 +77,7 @@ ${pc.bold("OPTIONS")}
   --full          Also delete ${pc.cyan("node_modules")} and reinstall dependencies
   --turbo         Also clear ${pc.cyan(".turbo")} caches (Turborepo)
   --build         Run the project's build after cleaning
+  --exclude <p>   Skip apps whose path contains <p> (repeatable)
   --dry-run       Show what would be deleted, delete nothing
   -y, --yes       Skip the confirmation prompt (for scripts / CI)
   -h, --help      Show this help
@@ -83,5 +87,6 @@ ${pc.bold("EXAMPLES")}
   npx next-nuke                 ${pc.dim("# reset .next in the current project/monorepo")}
   npx next-nuke --cache         ${pc.dim("# reclaim disk, keep the build")}
   npx next-nuke --full          ${pc.dim("# nuke .next + node_modules, then reinstall")}
+  npx next-nuke --yes --exclude apps/legacy   ${pc.dim("# reset every app except apps/legacy")}
   npx next-nuke --full --turbo --build
 `;
