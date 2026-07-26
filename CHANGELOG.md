@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-07-26
+
+### Added
+
+- Recorded terminal demo in the README (`assets/demo.gif`), plus the vhs tape and fixture script used to regenerate it. Excluded from the npm tarball by the existing `files` whitelist.
+- `CONTRIBUTING.md`, covering local development, the release process (moved out of the README), and how to re-record the demo.
+- npm provenance badge.
+
+### Changed
+
+- README now opens with the `rm -rf .next` comparison rather than the npkill one, since that's the alternative most readers are weighing, and explains how Turborepo can restore a deleted `.next` from its cache. Safety moved directly beneath it.
+
 ## [0.2.1] - 2026-07-24
 
 ### Fixed
@@ -45,7 +57,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Monorepo-aware discovery — downward from the current directory, skipping `node_modules`, requiring a real Next.js project, never following symlinks — with an interactive checklist when multiple apps are found.
 - Safety guardrails: refuses to run at `$HOME` or the filesystem root, and only ever deletes `.next`, `node_modules`, `.turbo`, or `.next/cache`.
 
-[Unreleased]: https://github.com/RoyBkker/next-nuke/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/RoyBkker/next-nuke/compare/v0.2.2...HEAD
+[0.2.2]: https://github.com/RoyBkker/next-nuke/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/RoyBkker/next-nuke/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/RoyBkker/next-nuke/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/RoyBkker/next-nuke/releases/tag/v0.1.1

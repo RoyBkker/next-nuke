@@ -1,6 +1,6 @@
 {
   "name": "next-nuke",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "npkill for Next.js — find and nuke bloated .next (and optionally node_modules/.turbo) folders, then reinstall a fresh instance. Monorepo & pnpm aware.",
   "keywords": [
     "nextjs",
