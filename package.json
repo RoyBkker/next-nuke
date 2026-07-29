@@ -1,6 +1,6 @@
 {
   "name": "next-nuke",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Delete bloated .next build and cache folders in a Next.js app or monorepo, then reinstall clean. Warns when .turbo would restore a stale build.",
   "keywords": [
     "nextjs",
