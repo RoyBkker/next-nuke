@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.3] - 2026-07-29
+
+### Added
+
+- `clean`, `clear-cache`, and `build-cache` keywords, so the package turns up for the terms people actually search when a `.next` folder has grown too large.
+
+### Changed
+
+- Rewrote the `package.json` description to say what the tool does instead of opening with the npkill comparison, matching the README. It now contains the words people search for (`delete`, `cache`, `clean`), and no longer reads as though a monorepo were required.
+
 ## [0.2.2] - 2026-07-26
 
 ### Added
@@ -57,7 +67,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Monorepo-aware discovery — downward from the current directory, skipping `node_modules`, requiring a real Next.js project, never following symlinks — with an interactive checklist when multiple apps are found.
 - Safety guardrails: refuses to run at `$HOME` or the filesystem root, and only ever deletes `.next`, `node_modules`, `.turbo`, or `.next/cache`.
 
-[Unreleased]: https://github.com/RoyBkker/next-nuke/compare/v0.2.2...HEAD
+[Unreleased]: https://github.com/RoyBkker/next-nuke/compare/v0.2.3...HEAD
+[0.2.3]: https://github.com/RoyBkker/next-nuke/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/RoyBkker/next-nuke/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/RoyBkker/next-nuke/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/RoyBkker/next-nuke/compare/v0.1.1...v0.2.0
